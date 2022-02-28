@@ -2,16 +2,15 @@ from tabulate import tabulate
 from copy import deepcopy
 
 class Vacuum:
-    rooms_checked = []
-    path = []
-    # move = 1, check = 2, clean = 3
-    cost = 0
-    left = ["Izquierda"]
-    right = ["Derecha"]
 
     def __init__(self, rooms_status, vacuum_pos):
         self.rooms_status = rooms_status
         self.vacuum_pos = vacuum_pos
+        self.rooms_checked = []
+        # move = 1, check = 2, clean = 3
+        self.cost = 0
+        self.left = ["Izquierda"]
+        self.right = ["Derecha"]
 
     def solve(self):
         print("Problema incial:")
@@ -20,7 +19,10 @@ class Vacuum:
         self.solve_right()
         print("Solución comenzando a la izquierda:")
         self.solve_left()
-        print(f"La mejor solución es {self.left[0] if self.left[1] < self.right[1] else self.right[0]} con un costo de {self.left[1] if self.left[1] < self.right[1] else self.right[1]}")
+        if self.left[1] == self.right[1]:
+            print("Las 2 soluciones tienen el mismo costo:", self.left[1])
+        else:
+            print(f"La mejor solución es {self.left[0] if self.left[1] < self.right[1] else self.right[0]} con un costo de {self.left[1] if self.left[1] < self.right[1] else self.right[1]}")
 
     def solve_right(self):
         # Primero se hace la solución con el movimiento hacia la derecha
@@ -71,7 +73,6 @@ class Vacuum:
     def solve_left(self):
         # Ahora haremos lo mismo pero comenzando por la izquierda
         vacuum_solve_left = deepcopy(self)
-        vacuum_solve_left.rooms_checked = []
         last_pos = self.vacuum_pos
         for i in range(vacuum_solve_left.vacuum_pos, -1, -1):
             if i not in vacuum_solve_left.rooms_checked:
@@ -118,6 +119,3 @@ class Vacuum:
         vacuum[self.vacuum_pos] = "_-_/|"
         dirty = [ "_____" if room else "XXXXX" for room in self.rooms_status ]
         print(tabulate([[chr(i+65) for i in range(len(self.rooms_status))], vacuum, dirty], tablefmt='grid'))
-
-vacuum = Vacuum([False,False,True,True,True], 3)
-vacuum.solve()

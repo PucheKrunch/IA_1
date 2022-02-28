@@ -44,7 +44,6 @@ def create_enviroment():
             print("Error, introduce una habitación válida")
 
     #Representación de la aspiradora
-    print("Configuración de la habitación:\n")
-    vacuum.draw_vacuum()
+    vacuum.solve()
 
 create_enviroment()
