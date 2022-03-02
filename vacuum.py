@@ -119,6 +119,3 @@ class Vacuum:
         vacuum[self.vacuum_pos] = "_-_/|"
         dirty = [ "_____" if room else "XXXXX" for room in self.rooms_status ]
         print(tabulate([[chr(i+65) for i in range(len(self.rooms_status))], vacuum, dirty], tablefmt='grid'))
-
-a1 = Vacuum([False,False,True,False,False], 1)
-a1.solve()
