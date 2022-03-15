@@ -1,6 +1,7 @@
 import sys
 import time
 import timeit
+import random
 from collections import deque
 
 
@@ -239,13 +240,14 @@ def move(state, direction):
             return None
         return newState
     
-#MAIN**************************************************************
+
 def main():
 
     global GoalNode
 
     #Initial Board state
-    InitialState = [7, 2, 4, 5, 0, 6, 8, 3, 1]
+    InitialState = [0,1,2,3,4,5,6,7,8]
+    random.shuffle(InitialState)
 
     #Start operation
     start = timeit.default_timer()
@@ -277,12 +279,13 @@ def main():
 
     #'''
     #Print results
+    print("Initial state: \n", InitialState[0:3], "\n", InitialState[3:6], "\n", InitialState[6::])
     print("Path: ",moves)
     print("Total cost: ",len(moves))
     print("Expanded nodes: ",str(NodesExpanded))
     print("Depth: ",str(deep))
     print("Max depth: ",str(MaxSearchDeep))
-    print("Execution time: ",format(time, '.8f'))
+    print("Execution time: ",format(time, '.2f'))
     #'''
 
 if __name__ == '__main__':
