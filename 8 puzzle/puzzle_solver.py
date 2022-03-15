@@ -7,13 +7,12 @@ from collections import deque
 
 #Information *****************************************************
 class PuzzleState:
-    def __init__(self, state, parent, move, depth, cost, key):
+    def __init__(self, state, parent, move, depth, cost):
         self.state = state
         self.parent = parent
         self.move = move
         self.depth = depth
         self.cost = cost
-        self.key = key
         if self.state:
             self.map = ''.join(str(e) for e in self.state)
     def __str__(self):
@@ -33,7 +32,7 @@ def bfs(startState):
     global MaxFrontier, GoalNode, MaxSearchDeep
 
     boardVisited= set()
-    Queue = deque([PuzzleState(startState, None, None, 0, 0, 0)])
+    Queue = deque([PuzzleState(startState, None, None, 0, 0)])
 
     while Queue:
         node = Queue.popleft()
@@ -58,14 +57,13 @@ def dfs(startState):
     global MaxFrontier, GoalNode, MaxSearchDeep
 
     boardVisited = set()
-    stack = list([PuzzleState(startState, None, None, 0, 0, 0)])
+    stack = list([PuzzleState(startState, None, None, 0, 0)])
     while stack:
         node = stack.pop()
         boardVisited.add(node.map)
         if node.state == GoalState:
             GoalNode = node
             return stack
-        #inverse the order of next paths for execution porpuses
         posiblePaths = reversed(subNodes(node))
         for path in posiblePaths:
             if path.map not in boardVisited:
@@ -83,10 +81,10 @@ def subNodes(node):
     NodesExpanded = NodesExpanded+1
 
     nextPaths = []
-    nextPaths.append(PuzzleState(move(node.state, 1), node, 1, node.depth + 1, node.cost + 1, 0))
-    nextPaths.append(PuzzleState(move(node.state, 2), node, 2, node.depth + 1, node.cost + 1, 0))
-    nextPaths.append(PuzzleState(move(node.state, 3), node, 3, node.depth + 1, node.cost + 1, 0))
-    nextPaths.append(PuzzleState(move(node.state, 4), node, 4, node.depth + 1, node.cost + 1, 0))
+    nextPaths.append(PuzzleState(move(node.state, 1), node, 1, node.depth + 1, node.cost + 1))
+    nextPaths.append(PuzzleState(move(node.state, 2), node, 2, node.depth + 1, node.cost + 1))
+    nextPaths.append(PuzzleState(move(node.state, 3), node, 3, node.depth + 1, node.cost + 1))
+    nextPaths.append(PuzzleState(move(node.state, 4), node, 4, node.depth + 1, node.cost + 1))
     nodes=[]
     for procPaths in nextPaths:
         if(procPaths.state!=None):
@@ -253,8 +251,10 @@ def main():
     start = timeit.default_timer()
 
     if str(sys.argv[1]) == "bfs":
+        print("Breadth First Search")
         bfs(InitialState)
     elif str(sys.argv[1]) == "dfs":
+        print("Depth First Search")
         dfs(InitialState)
     else:
         print("Invalid algorithm")
