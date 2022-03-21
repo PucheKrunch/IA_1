@@ -74,6 +74,32 @@ def dfs(startState):
         if len(stack) > MaxFrontier:
             MaxFrontier = len(stack)
     
+
+#IDDFS
+def idfs(startState, maxDeep):
+    global MaxFrontier, GoalNode, MaxSearchDeep
+
+    boardVisited = set()
+    stack = list([PuzzleState(startState, None, None, 0, 0)])
+    for deep in range(1, maxDeep + 1):
+        while stack:
+            node = stack.pop()
+            boardVisited.add(node.map)
+            if node.state == GoalState:
+                GoalNode = node
+                return stack
+            posiblePaths = reversed(subNodes(node))
+            for path in posiblePaths:
+                if path.map not in boardVisited:
+                    stack.append(path)
+                    boardVisited.add(path.map)
+                    if path.depth > MaxSearchDeep:
+                        if MaxSearchDeep == maxDeep:
+                            return
+                        MaxSearchDeep = 1 + MaxSearchDeep
+        if len(stack) > MaxFrontier:
+            MaxFrontier = len(stack)
+
 #Get Sub Nodes
 def subNodes(node):
 
@@ -256,6 +282,9 @@ def main():
     elif str(sys.argv[1]) == "dfs":
         print("Depth First Search")
         dfs(InitialState)
+    elif str(sys.argv[1]) == "idfs":
+        print("Iterative Deepening DFS")
+        idfs(InitialState, int(sys.argv[2]))
     else:
         print("Invalid algorithm")
 
@@ -263,30 +292,33 @@ def main():
     time = stop-start
 
     #Path
-    deep = GoalNode.depth
-    moves = []
-    while InitialState != GoalNode.state:
-        if GoalNode.move == 1:
-            path = 'Up'
-        if GoalNode.move == 2:
-            path = 'Down'
-        if GoalNode.move == 3:
-            path = 'Left'
-        if GoalNode.move == 4:
-            path = 'Right'
-        moves.insert(0, path)
-        GoalNode = GoalNode.parent
+    try:
+        deep = GoalNode.depth
+        moves = []
+        while InitialState != GoalNode.state:
+            if GoalNode.move == 1:
+                path = 'Up'
+            if GoalNode.move == 2:
+                path = 'Down'
+            if GoalNode.move == 3:
+                path = 'Left'
+            if GoalNode.move == 4:
+                path = 'Right'
+            moves.insert(0, path)
+            GoalNode = GoalNode.parent
 
-    #'''
-    #Print results
-    print("Initial state: \n", InitialState[0:3], "\n", InitialState[3:6], "\n", InitialState[6::])
-    print("Path: ",moves)
-    print("Total cost: ",len(moves))
-    print("Expanded nodes: ",str(NodesExpanded))
-    print("Depth: ",str(deep))
-    print("Max depth: ",str(MaxSearchDeep))
-    print("Execution time: ",format(time, '.2f'))
-    #'''
+        #'''
+        #Print results
+        print("Path: ",moves)
+        print("Initial state: \n", InitialState[0:3], "\n", InitialState[3:6], "\n", InitialState[6::])
+        print("Total cost: ",len(moves))
+        print("Expanded nodes: ",str(NodesExpanded))
+        print("Depth: ",str(deep))
+        print("Max depth: ",str(MaxSearchDeep))
+        print("Execution time: ",format(time, '.2f'))
+        #'''
+    except:
+        print("No solution")
 
 if __name__ == '__main__':
     main()
