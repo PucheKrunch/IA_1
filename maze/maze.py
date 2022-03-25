@@ -6,7 +6,7 @@ import os
 
 COUNTER = [0,0]
 COORDINATES = [None,None]
-IMAGE_NAME = "maze4.png"
+IMAGE_NAME = "maze3.png"
 X,Y = 0,0
 
 class Node:
@@ -47,7 +47,6 @@ def solve():
     while len(frontier) > 0:
         current = frontier.pop(0)
         if current.x == COORDINATES[1][0] and current.y == COORDINATES[1][1]:
-            print(current)
             break
         neighbors = get_neighbors(current,maze)
         for neighbor in neighbors:
