@@ -2,12 +2,11 @@ from matplotlib import pyplot as plt
 from matplotlib.backend_bases import MouseButton
 import matplotlib.image as mpimg
 from PIL import Image
-from queue import Queue
 import os
 
 COUNTER = [0,0]
 COORDINATES = [None,None]
-IMAGE_NAME = "maze.png"
+IMAGE_NAME = "maze4.png"
 X,Y = 0,0
 
 class Node:
@@ -68,7 +67,7 @@ def solve():
         print(node,end=" ")
     print()
     for node in path:
-        plt.plot(node.x,node.y,'b*', markersize=12)
+        plt.plot(node.x,node.y,'b.', markersize=4)
     fig.canvas.draw()
 
 def get_neighbors(node,maze):
@@ -91,7 +90,7 @@ def onclick(event):
     if event.button is MouseButton.LEFT and COUNTER[0] == 0:
         circle=plt.Circle((round(event.xdata),round(event.ydata)),.5,color='red')
         ax.add_patch(circle)
-        fig.canvas.draw() #this line was missing earlier
+        fig.canvas.draw()
         COUNTER[0] = 1
         COORDINATES[0] = (round(event.xdata),round(event.ydata))
     elif event.button is MouseButton.RIGHT and COUNTER[1] == 0:
