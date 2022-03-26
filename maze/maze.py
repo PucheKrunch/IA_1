@@ -3,10 +3,11 @@ from matplotlib.backend_bases import MouseButton
 import matplotlib.image as mpimg
 from PIL import Image
 import os
+import time
 
 COUNTER = [0,0]
 COORDINATES = [None,None]
-IMAGE_NAME = "maze3.png"
+IMAGE_NAME = "big.png"
 X,Y = 0,0
 
 class Node:
@@ -21,14 +22,9 @@ class Node:
     def __eq__(self, other):
         return self.x == other.x and self.y == other.y
 
-def search(array,element):
-    for i in range(len(array)):
-        if array[i] == element:
-            return True
-    return False
-
 #Solving the maze with bfs
 def solve():
+    start = time.time()
     global X
     global Y
     maze = {}
@@ -43,18 +39,19 @@ def solve():
             else:
                 maze[(x,y)] = "#"
     frontier = [Node(COORDINATES[0][0],COORDINATES[0][1])]
-    explored = [Node(COORDINATES[0][0],COORDINATES[0][1])]
+    explored = {}
+    explored[(COORDINATES[0][0],COORDINATES[0][1])] = Node(COORDINATES[0][0],COORDINATES[0][1])
     while len(frontier) > 0:
         current = frontier.pop(0)
         if current.x == COORDINATES[1][0] and current.y == COORDINATES[1][1]:
             break
         neighbors = get_neighbors(current,maze)
         for neighbor in neighbors:
-            if search(explored, neighbor):
+            if (neighbor.x,neighbor.y) in explored:
                 pass
             else:
                 frontier.append(neighbor)
-                explored.append(neighbor)
+                explored[(neighbor.x,neighbor.y)] = neighbor
     path = []
     while current.parent is not None:
         path.append(current)
@@ -68,6 +65,9 @@ def solve():
     for node in path:
         plt.plot(node.x,node.y,'b.', markersize=4)
     fig.canvas.draw()
+    print("Nodes expanded:",len(explored))
+    print("Depth:",len(path))
+    print("Execution time:",time.time()-start)
 
 def get_neighbors(node,maze):
     neighbors = []
@@ -87,8 +87,7 @@ def onclick(event):
     global COORDINATES
     global IMAGE_NAME
     if event.button is MouseButton.LEFT and COUNTER[0] == 0:
-        circle=plt.Circle((round(event.xdata),round(event.ydata)),.5,color='red')
-        ax.add_patch(circle)
+        plt.plot(round(event.xdata),round(event.ydata),'r.', markersize=12)
         fig.canvas.draw()
         COUNTER[0] = 1
         COORDINATES[0] = (round(event.xdata),round(event.ydata))
